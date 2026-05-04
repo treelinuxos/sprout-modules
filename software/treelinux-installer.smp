@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+import sys
+import os#
+
+sys.path.insert(0, "/usr/lib/sprout_lib")
+sys.path.insert(1, "/usr/lib/python3.12/site-packages")
+
+try:
+    import sprout_lib
+except ImportError:
+    print("! sprout_lib not found")
+    sys.exit(1)
+
+def main():
+    sprout_lib.info("=== Treelinux Installer ===")
+    sprout_lib.info("Starting installation process...")
+    
+    # Step 1: Hardware detection
+    sprout_lib.info("\n[1/8] Hardware detection...")
+    sprout_lib.info("  Running hardware-detect.smp...")
+    os.system("sprout run /etc/treelinux/modules/software/hardware-detect.smp")
+    
+    # Step 2: Network setup
+    sprout_lib.info("\n[2/8] Network setup...")
+    sprout_lib.info("  Running network-setup.smp...")
+    os.system("sprout run /etc/treelinux/modules/software/network-setup.smp")
+    
+    # Step 3: Base install
+    sprout_lib.info("\n[3/8] Base system install...")
+    sprout_lib.info("  Running base-install.smp...")
+    os.system("sprout run /etc/treelinux/modules/software/base-install.smp")
+    
+    # Step 4: Locale setup
+    sprout_lib.info("\n[4/8] Locale and timezone...")
+    sprout_lib.info("  Running locale-setup.smp...")
+    os.system("sprout run /etc/treelinux/modules/software/locale-setup.smp")
+    
+    # Step 5: Bootloader
+    sprout_lib.info("\n[5/8] Bootloader install...")
+    sprout_lib.info("  Running bootloader.smp...")
+    os.system("sprout run /etc/treelinux/modules/software/bootloader.smp")
+    
+    # Step 6: User setup
+    sprout_lib.info("\n[6/8] User account...")
+    sprout_lib.info("  Running user-setup.smp...")
+    os.system("sprout run /etc/treelinux/modules/software/user-setup.smp")
+    
+    # Step 7: Graphics drivers
+    sprout_lib.info("\n[7/8] Graphics drivers...")
+    sprout_lib.info("  Running graphics-drivers.smp...")
+    os.system("sprout run /etc/treelinux/modules/software/graphics-drivers.smp")
+    
+    # Step 8: Audio setup
+    sprout_lib.info("\n[8/8] Audio setup...")
+    sprout_lib.info("  Running audio-setup.smp...")
+    os.system("sprout run /etc/treelinux/modules/software/audio-setup.smp")
+    
+    sprout_lib.info("\n=== Installation Complete! ===")
+    sprout_lib.info("You can now:")
+    sprout_lib.info("  1. Reboot the system")
+    sprout_lib.info("  2. Remove installation media")
+    sprout_lib.info("  3. Boot into Treelinux!")
+
+if __name__ == "__main__":
+    main()
