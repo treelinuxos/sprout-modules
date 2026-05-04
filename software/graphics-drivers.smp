@@ -24,27 +24,29 @@ def main():
     
     if gpu_type == "nvidia":
         sprout_lib.info("Installing NVIDIA drivers...")
-        sprout_lib.package_install("nvidia")
-        sprout_lib.package_install("nvidia-settings")
-        sprout_lib.package_install("nvidia-drm")
+        sprout_lib.apply("nvidia")
+        sprout_lib.apply("nvidia-settings")
+        sprout_lib.apply("nvidia-drm")
     elif gpu_type == "amd":
         sprout_lib.info("Installing AMD drivers...")
-        sprout_lib.package_install("linux-firmware-amd")
-        sprout_lib.package_install("xf86-video-amdgpu")
+        sprout_lib.apply("linux-firmware-amd")
+        sprout_lib.apply("xf86-video-amdgpu")
     else:  # Intel/other
         sprout_lib.info("Installing Intel/Generic drivers...")
-        sprout_lib.package_install("linux-firmware-intel")
-        sprout_lib.package_install("xf86-video-intel")
+        sprout_lib.apply("linux-firmware-intel")
+        sprout_lib.apply("xf86-video-intel")
     
     # Common video drivers
     sprout_lib.info("Installing common video drivers...")
-    sprout_lib.package_install("xf86-video-fbdev")
-    sprout_lib.package_install("xf86-video-vesa")
-    sprout_lib.package_install("mesa")
-    sprout_lib.package_install("mesa-gl")
-    sprout_lib.package_install("mesa-gles")
+    sprout_lib.apply("xf86-video-fbdev")
+    sprout_lib.apply("xf86-video-vesa")
+    sprout_lib.apply("mesa")
+    sprout_lib.apply("mesa-gl")
+    sprout_lib.apply("mesa-gles")
     
     sprout_lib.info("Graphics drivers setup complete!")
 
 if __name__ == "__main__":
     main()
+EOF'
+echo "Fixed graphics-drivers.smp"

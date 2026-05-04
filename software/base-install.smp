@@ -16,37 +16,37 @@ def main():
     
     # Install essential packages
     sprout_lib.info("Installing base packages...")
-    sprout_lib.package_install("alpine-base")
-    sprout_lib.package_install("alpine-baselayout")
-    sprout_lib.package_install("openrc")
-    sprout_lib.package_install("busybox")
+    sprout_lib.apply("alpine-base")
+    sprout_lib.apply("alpine-baselayout")
+    sprout_lib.apply("openrc")
+    sprout_lib.apply("busybox")
     
     # Install filesystem tools
     sprout_lib.info("Installing filesystem tools...")
-    sprout_lib.package_install("e2fsprogs")  # ext4 tools
-    sprout_lib.package_install("btrfs-progs")  # Btrfs support
-    sprout_lib.package_install("xfsprogs")  # XFS tools
-    sprout_lib.package_install("lvm2")  # LVM support
+    sprout_lib.apply("e2fsprogs")  # ext4 tools
+    sprout_lib.apply("btrfs-progs")  # Btrfs support
+    sprout_lib.apply("xfsprogs")  # XFS tools
+    sprout_lib.apply("lvm2")  # LVM support
     
     # Install network tools
     sprout_lib.info("Installing network tools...")
-    sprout_lib.package_install("ifupdown-ng")
-    sprout_lib.package_install("wpa_supplicant")  # WiFi
-    sprout_lib.package_install("wireless-tools")
-    sprout_lib.package_install("networkmanager")
+    sprout_lib.apply("ifupdown-ng")
+    sprout_lib.apply("wpa_supplicant")  # WiFi
+    sprout_lib.apply("wireless-tools")
+    sprout_lib.apply("networkmanager")
     
     # Install boot tools
     sprout_lib.info("Installing boot tools...")
-    sprout_lib.package_install("linux-virt")  # Virtual kernel
-    sprout_lib.package_install("linux-firmware-none")  # No firmware bundle
+    sprout_lib.apply("linux-virt")  # Virtual kernel
+    sprout_lib.apply("linux-firmware-none")  # No firmware bundle
     
     # Install essential system tools
     sprout_lib.info("Installing system tools...")
-    sprout_lib.package_install("blkid")
-    sprout_lib.package_install("fdisk")  # Partition tools
-    sprout_lib.package_install("sfdisk")
-    sprout_lib.package_install("mkinitfs")  # Initramfs generator
-    sprout_lib.package_install("openssh")  # SSH access
+    sprout_lib.apply("blkid")
+    sprout_lib.apply("fdisk")  # Partition tools
+    sprout_lib.apply("sfdisk")
+    sprout_lib.apply("mkinitfs")  # Initramfs generator
+    sprout_lib.apply("openssh")  # SSH access
     
     # Enable essential services
     sprout_lib.info("Enabling services...")
@@ -59,3 +59,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+EOF'
+echo "Fixed base-install.smp"
