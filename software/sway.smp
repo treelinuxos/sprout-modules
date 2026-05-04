@@ -1,17 +1,75 @@
-#!/usr/bin/env micropython
-"""
-sway.smp — install sway wayland compositor and essentials."""
+#!/usr/bin/env python3
+import sys
+import os
 
-import sprout
+# Add sprout_lib to path
+sys.path.insert(0, "/usr/lib/sprout_lib")
+sys.path.insert(1, "/usr/lib/python3.12/site-packages")
 
-sprout.info("installing sway desktop environment")
-sprout.apply([
-    "sway",
-    "foot",
-    "waybar",
-    "wofi",
-    "swayidle",
-    "swaylock",
-])
-sprout.service_enable("sway")
-sprout.info("sway installed")
+try:
+    import sprout_lib
+except ImportError:
+    print("! sprout_lib not found")
+    sys.exit(1)
+
+def main():
+    sprout_lib.info("Setting up Sway Wayland compositor...")
+    
+    # Install Sway and essential packages
+    sprout_lib.info("Installing Sway packages...")
+    sprout_lib.package_install("sway")
+    sprout_lib.package_install("xwayland")  # for X11 app support
+    sprout_lib.package_install("swaylock")
+    sprout_lib.package_install("swaylockd")
+    sprout_lib.package_install("wmenu")  # default menu
+    sprout_lib.package_install("swaybg")  # wallpaper
+    sprout_lib.package_install("grim")  # screenshots
+    sprout_lib.package_install("slurp")  # region selection
+    sprout_lib.package_install("wl-clipboard")  # clipboard
+    sprout_lib.package_install("i3status")  # status bar
+    
+    # Install fonts
+    sprout_lib.info("Installing fonts...")
+    sprout_lib.package_install("font-dejavu")
+    sprout_lib.package_install("ttf-font-awesome")  # icon font
+    
+    # Install PipeWire for audio
+    sprout_lib.info("Installing PipeWire for audio...")
+    sprout_lib.package_install("pipewire")
+    sprout_lib.package_install("pipewire-pulse")
+    sprout_lib.package_install("wireplumber")
+    
+    # Install seat manager (seatd or elogind)
+    sprout_lib.info("Installing seat manager...")
+    if os.system("which elogind > /dev/null 2>&1") == 0:
+        sprout_lib.info("elogind already installed")
+    else:
+        sprout_lib.package_install("seatd")
+        sprout_lib.service_enable("seatd")
+    
+    # Install xdg-desktop-portal for screensharing
+    sprout_lib.info("Installing xdg portals...")
+    sprout_lib.package_install("xdg-desktop-portal")
+    sprout_lib.package_install("xdg-desktop-portal-wlr")
+    
+    # Enable D-Bus
+    sprout_lib.info("Enabling D-Bus...")
+    sprout_lib.service_enable("dbus")
+    
+    # Create default config for user
+    sprout_lib.info("Setting up default Sway config...")
+    config_dir = os.path.expanduser("~/.config/sway")
+    if not os.path.exists(config_dir):
+        os.makedirs(config_dir, exist_ok=True)
+        if os.path.exists("/etc/sway/config"):
+            import shutil
+            shutil.copy("/etc/sway/config", os.path.join(config_dir, "config"))
+            sprout_lib.info("Default config copied to ~/.config/sway/")
+    
+    sprout_lib.info("Sway setup complete!")
+    sprout_lib.info("You can now:")
+    sprout_lib.info("  1. Start Sway from TTY: dbus-launch sway")
+    sprout_lib.info("  2. Or add to ~/.profile: exec dbus-launch sway")
+
+if __name__ == "__main__":
+    main()

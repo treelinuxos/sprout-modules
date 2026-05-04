@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+import sys
+import os
+
+# Add sprout_lib to path
+sys.path.insert(0, "/usr/lib/sprout_lib")
+sys.path.insert(1, "/usr/lib/python3.12/site-packages")
+
+try:
+    import sprout_lib
+except ImportError:
+    print("! sprout_lib not found")
+    sys.exit(1)
+
+def main():
+    sprout_lib.info("Setting up GNOME desktop environment...")
+    
+    # Install GNOME and essential packages
+    sprout_lib.info("Installing GNOME packages...")
+    sprout_lib.package_install("gnome")
+    sprout_lib.package_install("gnome-terminal")
+    sprout_lib.package_install("gnome-software-plugin-apk")
+    sprout_lib.package_install("font-dejavu")
+    
+    # Install D-Bus and eudev
+    sprout_lib.info("Installing D-Bus and eudev...")
+    sprout_lib.package_install("dbus")
+    sprout_lib.package_install("eudev")
+    
+    # Install PipeWire for audio
+    sprout_lib.info("Installing PipeWire...")
+    sprout_lib.package_install("pipewire")
+    sprout_lib.package_install("pipewire-pulse")
+    sprout_lib.package_install("wireplumber")
+    
+    # Install NetworkManager for GUI network config
+    sprout_lib.info("Installing NetworkManager...")
+    sprout_lib.package_install("networkmanager")
+    sprout_lib.package_install("networkmanager-wifi")
+    
+    # Enable services
+    sprout_lib.info("Enabling services...")
+    sprout_lib.service_enable("dbus")
+    sprout_lib.service_enable("gdm")
+    sprout_lib.service_enable("networkmanager")
+    sprout_lib.service_enable("elogind")
+    
+    # Enable apk-polkit-server for GNOME Software
+    sprout_lib.info("Setting up polkit...")
+    sprout_lib.package_install("apk-polkit-rs")
+    sprout_lib.service_enable("apk-polkit-server")
+    
+    sprout_lib.info("GNOME setup complete!")
+    sprout_lib.info("You can now:")
+    sprout_lib.info("  1. Reboot and login via GDM graphical login")
+    sprout_lib.info("  2. Or start GNOME with: dbus-launch gnome-shell")
+
+if __name__ == "__main__":
+    main()
