@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+import sys
+import os
+
+sys.path.insert(0, "/usr/lib/sprout_lib")
+sys.path.insert(1, "/usr/lib/python3.12/site-packages")
+
+try:
+    import sprout_lib
+except ImportError:
+    print("! sprout_lib not found")
+    sys.exit(1)
+
+def main():
+    sprout_lib.info("Setting up graphics drivers...")
+    
+    # Detect GPU type
+    gpu_type = "intel"  # default
+    if os.path.exists("/tmp/gpu_type"):
+        with open("/tmp/gpu_type") as f:
+            gpu_type = f.read().strip()
+    
+    sprout_lib.info(f"GPU type: {gpu_type}")
+    
+    if gpu_type == "nvidia":
+        sprout_lib.info("Installing NVIDIA drivers...")
+        sprout_lib.package_install("nvidia")
+        sprout_lib.package_install("nvidia-settings")
+        sprout_lib.package_install("nvidia-drm")
+    elif gpu_type == "amd":
+        sprout_lib.info("Installing AMD drivers...")
+        sprout_lib.package_install("linux-firmware-amd")
+        sprout_lib.package_install("xf86-video-amdgpu")
+    else:  # Intel/other
+        sprout_lib.info("Installing Intel/Generic drivers...")
+        sprout_lib.package_install("linux-firmware-intel")
+        sprout_lib.package_install("xf86-video-intel")
+    
+    # Common video drivers
+    sprout_lib.info("Installing common video drivers...")
+    sprout_lib.package_install("xf86-video-fbdev")
+    sprout_lib.package_install("xf86-video-vesa")
+    sprout_lib.package_install("mesa")
+    sprout_lib.package_install("mesa-gl")
+    sprout_lib.package_install("mesa-gles")
+    
+    sprout_lib.info("Graphics drivers setup complete!")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+import sys
+import os#
+
+sys.path.insert(0, "/usr/lib/sprout_lib")
+sys.path.insert(1, "/usr/lib/python3.12/site-packages")
+
+try:
+    import sprout_lib
+except ImportError:
+    print("! sprout_lib not found")
+    sys.exit(1)
+
+def main():
+    sprout_lib.info("Setting up user account...")
+    
+    username = os.environ.get("TREELOCALE_USER", "user")
+    sprout_lib.info(f"Creating user: {username}")
+    
+    # Create user
+    sprout_lib.run(f"useradd -m -s /bin/sh {username}")
+    
+    # Set password (will prompt if run interactively)
+    sprout_lib.info(f"Set password for {username}...")
+    sprout_lib.run(f"passwd {username}")
+    
+    # Add to necessary groups
+    sprout_lib.info("Adding user to groups...")
+    groups = ["wheel", "audio", "video", "input", "network"]
+    for group in groups:
+        sprout_lib.run(f"adduser {username} {group}")
+    
+    # Create user config
+    sprout_lib.info("Creating user config...")
+    from sprout.users import create_user_config
+    create_user_config(username)
+    
+    sprout_lib.info("User setup complete!")
+    sprout_lib.info(f"  Username: {username}")
+    sprout_lib.info(f"  Groups: {', '.join(groups)}")
+    sprout_lib.info("  Config: /etc/treelinux/users/{username}.prc")
+
+if __name__ == "__main__":
+    main()

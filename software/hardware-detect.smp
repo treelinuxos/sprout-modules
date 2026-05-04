@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+import sys
+import os
+
+sys.path.insert(0, "/usr/lib/sprout_lib")
+sys.path.insert(1, "/usr/lib/python3.12/site-packages")
+
+try:
+    import sprout_lib
+except ImportError:
+    print("! sprout_lib not found")
+    sys.exit(1)
+
+def main():
+    sprout_lib.info("Detecting hardware...")
+    
+    # Detect CPU
+    sprout_lib.info("Checking CPU...")
+    cpu_info = sprout_lib.run("cat /proc/cpuinfo | grep 'model name' | head -1")
+    if cpu_info:
+        sprout_lib.info(f"CPU: {cpu_info.strip()}")
+    
+    # Detect GPU
+    sprout_lib.info("Checking GPU...")
+    gpu_info = sprout_lib.run("lspci | grep VGA")
+    if gpu_info:
+        sprout_lib.info(f"GPU: {gpu_info.strip()}")
+    
+    # Detect if NVIDIA
+    nvidia = sprout_lib.run("lspci | grep -i nvidia")
+    if nvidia:
+        sprout_lib.info("NVIDIA GPU detected")
+        with open("/tmp/gpu_type", "w") as f:
+            f.write("nvidia")
+    # Detect if AMD
+    elif sprout_lib.run("lspci | grep -i amd"):
+        sprout_lib.info("AMD GPU detected")
+        with open("/tmp/gpu_type", "w") as f:
+            f.write("amd")
+    else:
+        sprout_lib.info("Intel/Other GPU detected")
+        with open("/tmp/gpu_type", "w") as f:
+            f.write("intel")
+    
+    # Detect audio
+    sprout_lib.info("Checking audio...")
+    audio = sprout_lib.run("lspci | grep -i audio")
+    if audio:
+        sprout_lib.info(f"Audio: {audio.strip()}")
+    
+    # Detect network interfaces
+    sprout_lib.info("Checking network interfaces...")
+    interfaces = sprout_lib.run("ip link show | grep '^[0-9]' | awk '{print $2}' | tr -d ':'")
+    if interfaces:
+        sprout_lib.info(f"Interfaces: {interfaces.strip()}")
+    
+    # Detect RAM
+    sprout_lib.info("Checking memory...")
+    mem = sprout_lib.run("free -m | grep Mem | awk '{print $2}'")
+    if mem:
+        sprout_lib.info(f"Memory: {mem.strip()} MB")
+    
+    # Detect disk space
+    sprout_lib.info("Checking disks...")
+    disks = sprout_lib.run("lsblk -d -o NAME,SIZE | grep -v NAME")
+    if disks:
+        sprout_lib.info(f"Disks:\n{disks.strip()}")
+    
+    sprout_lib.info("Hardware detection complete!")
+
+if __name__ == "__main__":
+    main()

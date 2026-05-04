@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+import sys
+import os#
+
+sys.path.insert(0, "/usr/lib/sprout_lib")
+sys.path.insert(1, "/usr/lib/python3.12/site-packages")
+
+try:
+    import sprout_lib
+except ImportError:
+    print("! sprout_lib not found")
+    sys.exit(1)
+
+def main():
+    sprout_lib.info("Installing Alpine base system...")
+    
+    # Install essential packages
+    sprout_lib.info("Installing base packages...")
+    sprout_lib.package_install("alpine-base")
+    sprout_lib.package_install("alpine-baselayout")
+    sprout_lib.package_install("openrc")
+    sprout_lib.package_install("busybox")
+    
+    # Install filesystem tools
+    sprout_lib.info("Installing filesystem tools...")
+    sprout_lib.package_install("e2fsprogs")  # ext4 tools
+    sprout_lib.package_install("btrfs-progs")  # Btrfs support
+    sprout_lib.package_install("xfsprogs")  # XFS tools
+    sprout_lib.package_install("lvm2")  # LVM support
+    
+    # Install network tools
+    sprout_lib.info("Installing network tools...")
+    sprout_lib.package_install("ifupdown-ng")
+    sprout_lib.package_install("wpa_supplicant")  # WiFi
+    sprout_lib.package_install("wireless-tools")
+    sprout_lib.package_install("networkmanager")
+    
+    # Install boot tools
+    sprout_lib.info("Installing boot tools...")
+    sprout_lib.package_install("linux-virt")  # Virtual kernel
+    sprout_lib.package_install("linux-firmware-none")  # No firmware bundle
+    
+    # Install essential system tools
+    sprout_lib.info("Installing system tools...")
+    sprout_lib.package_install("blkid")
+    sprout_lib.package_install("fdisk")  # Partition tools
+    sprout_lib.package_install("sfdisk")
+    sprout_lib.package_install("mkinitfs")  # Initramfs generator
+    sprout_lib.package_install("openssh")  # SSH access
+    
+    # Enable essential services
+    sprout_lib.info("Enabling services...")
+    sprout_lib.service_enable("networking")
+    sprout_lib.service_enable("sshd")
+    sprout_lib.service_enable("networkmanager")
+    
+    sprout_lib.info("Base installation complete!")
+    sprout_lib.info("Next: Run bootloader.smp to install GRUB")
+
+if __name__ == "__main__":
+    main()
