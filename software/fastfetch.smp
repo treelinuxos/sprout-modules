@@ -40,7 +40,6 @@ LOGO = """
                             kOkkWl                           
                        ,  .xWOkkWW:  .                       
                     ,:coxlOOMOkOOMOxkol:,.                   
-                    ... ..,,;. ..;...  ..                    
                                                             
                                                             """
 
@@ -82,8 +81,8 @@ def install_config():
     "logo": {
         "type": "file-raw",
         "source": "/etc/treelinux/treelinux_logo.txt",
-        "width": 30,
-        "height": 29,
+        "width": 1,
+        "height": 1,
         "padding": {
             "top": 0,
             "left": 0,
