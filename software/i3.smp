@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+import sys
+import os#
+
+# Add sprout_lib to path
+sys.path.insert(0, "/usr/lib/sprout_lib")
+sys.path.insert(1, "/usr/lib/python3.12/site-packages")
+
+try:
+    import sprout_lib
+except ImportError:
+    print("! sprout_lib not found")
+    sys.exit(1)
+
+def main():
+    sprout_lib.info("Setting up i3 window manager...")
+    
+    # Install X11 first if not present
+    sprout_lib.info("Checking X11 setup...")
+    if os.system("which Xorg > /dev/null 2>&1") != 0:
+        sprout_lib.warn("Xorg not found, installing X11...")
+        sprout_lib.package_install("xorg-server")
+        sprout_lib.package_install("xinit")
+        sprout_lib.package_install("xf86-video-vesa")
+        sprout_lib.package_install("xf86-input-mouse")
+        sprout_lib.package_install("xf86-input-keyboard")
+        sprout_lib.package_install("xauth")
+        sprout_lib.package_install("xrandr")
+        sprout_lib.package_install("setxkbmap")
+    
+    # Install i3 and essential packages
+    sprout_lib.info("Installing i3 packages...")
+    sprout_lib.package_install("i3wm")
+    sprout_lib.package_install("i3status")  # status bar
+    sprout_lib.package_install("xterm")  # default terminal
+    sprout_lib.package_install("dmenu")  # application launcher
+    sprout_lib.package_install("font-terminus")
+    sprout_lib.package_install("font-dejavu")
+    
+    # Enable D-Bus
+    sprout_lib.info("Enabling D-Bus...")
+    sprout_lib.service_enable("dbus")
+    sprout_lib.service_enable("elogind")
+    
+    sprout_lib.info("i3 setup complete!")
+    sprout_lib.info("You can now:")
+    sprout_lib.info("  1. Start i3 from command line: startx /usr/bin/i3")
+    sprout_lib.info("  2. Or add to ~/.xinitrc: exec i3")
+
+if __name__ == "__main__":
+    main()
