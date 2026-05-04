@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+import sys
+import os
+
+# Add sprout_lib to path
+sys.path.insert(0, "/usr/lib/sprout_lib")
+sys.path.insert(1, "/usr/lib/python3.12/site-packages")
+
+try:
+    import sprout_lib
+except ImportError:
+    print("! sprout_lib not found")
+    sys.exit(1)
+
+def main():
+    sprout_lib.info("Setting up Treelinux fastfetch logo...")
+    
+    # Check if fastfetch is installed
+    if os.system("which fastfetch > /dev/null 2>&1") != 0:
+        sprout_lib.warn("fastfetch not installed, skipping")
+        return
+    
+    # Install logo
+    install_logo()
+    
+    # Install config
+    install_config()
+    
+    sprout_lib.info("Fastfetch setup complete!")
+    sprout_lib.info("Run 'fastfetch' to see the Treelinux logo")
+
+def install_logo():
+    """Install the Treelinux ASCII logo."""
+    # Try multiple locations
+    locations = [
+        "/usr/lib/sprout/treelinux_logo.txt",
+        "/etc/treelinux/modules/treelinux_logo.txt",
+        "/tmp/treelinux_logo.txt"
+    ]
+    
+    src = None
+    for loc in locations:
+        if os.path.exists(loc):
+            src = loc
+            break
+    
+    if not src:
+        sprout_lib.warn("Logo not found in expected locations")
+        return
+    
+    dst = "/etc/treelinux/treelinux_logo.txt"
+    os.system(f"cp {src} {dst}")
+    sprout_lib.info(f"Logo installed: {dst}")
+
+def install_config():
+    """Install the fastfetch config."""
+    config_dir = os.path.expanduser("~/.config/fastfetch")
+    config_path = os.path.join(config_dir, "config.jsonc")
+    
+    # Create directory
+    os.makedirs(config_dir, exist_ok=True)
+    
+    # Create config
+    config = """{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        "type": "file-raw",
+        "source": "/etc/treelinux/treelinux_logo.txt",
+        "width": 30,
+        "height": 15,
+        "padding": {
+            "top": 0,
+            "left": 0,
+            "right": 0
+        }
+    },
+    "modules": [
+        "title",
+        "separator",
+        "os",
+        "host",
+        "kernel",
+        "uptime",
+        "packages",
+        "shell",
+        "terminal",
+        "cpu",
+        "memory",
+        "disk",
+        "localip",
+        "locale",
+        "break",
+        "colors"
+    ]
+}
+"""
+    
+    with open(config_path, "w") as f:
+        f.write(config)
+    
+    sprout_lib.info(f"Config installed: {config_path}")
+
+if __name__ == "__main__":
+    main()
