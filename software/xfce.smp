@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+import sys
+import os
+
+# Add sprout_lib to path
+sys.path.insert(0, "/usr/lib/sprout_lib")
+sys.path.insert(1, "/usr/lib/python3.12/site-packages")
+
+try:
+    import sprout_lib
+except ImportError:
+    print("! sprout_lib not found")
+    sys.exit(1)
+
+def main():
+    sprout_lib.info("Setting up XFCE desktop environment...")
+    
+    # Check if X11 is installed
+    sprout_lib.info("Checking X11 setup...")
+    if os.system("which Xorg > /dev/null 2>&1") != 0:
+        sprout_lib.warn("Xorg not found, installing X11 first...")
+        # Install X11
+        sprout_lib.package_install("xorg-server")
+        sprout_lib.package_install("xinit")
+        sprout_lib.package_install("xf86-video-vesa")
+        sprout_lib.package_install("xf86-input-mouse")
+        sprout_lib.package_install("xf86-input-keyboard")
+        sprout_lib.package_install("xauth")
+        sprout_lib.package_install("xrandr")
+        sprout_lib.package_install("setxkbmap")
+    
+    # Install XFCE4 and essential packages
+    sprout_lib.info("Installing XFCE4 packages...")
+    sprout_lib.package_install("xfce4")
+    sprout_lib.package_install("xfce4-terminal")
+    sprout_lib.package_install("xfce4-screensaver")
+    sprout_lib.package_install("lightdm-gtk-greeter")
+    sprout_lib.package_install("font-dejavu")
+    
+    # Install theme and icons
+    sprout_lib.info("Installing themes and icons...")
+    sprout_lib.package_install("adw-gtk3")
+    sprout_lib.package_install("adwaita-xfce-icon-theme")
+    
+    # Install file management packages
+    sprout_lib.info("Installing file management packages...")
+    sprout_lib.package_install("thunar")
+    sprout_lib.package_install("thunar-volman")
+    sprout_lib.package_install("gvfs")
+    
+    # Install Polkit for privilege escalation
+    sprout_lib.info("Installing Polkit integration...")
+    sprout_lib.package_install("xfce-polkit")
+    sprout_lib.package_install("polkit-elogind")
+    
+    # Enable services
+    sprout_lib.info("Enabling services...")
+    sprout_lib.service_enable("dbus")
+    sprout_lib.service_enable("lightdm")
+    sprout_lib.service_enable("elogind")
+    
+    sprout_lib.info("XFCE setup complete!")
+    sprout_lib.info("You can now:")
+    sprout_lib.info("  1. Start XFCE from command line: startx")
+    sprout_lib.info("  2. Or reboot and login via lightdm graphical login")
+
+if __name__ == "__main__":
+    main()
