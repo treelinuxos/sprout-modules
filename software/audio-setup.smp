@@ -16,22 +16,18 @@ def main():
     
     # Install PipeWire (modern audio)
     sprout_lib.info("Installing PipeWire...")
-    sprout_lib.package_install("pipewire")
-    sprout_lib.package_install("pipewire-pulse")
-    sprout_lib.package_install("wireplumber")
+    sprout_lib.apply("pipewire")
+    sprout_lib.apply("pipewire-pulse")
+    sprout_lib.apply("wireplumber")
     
     # Install ALSA utils (fallback)
     sprout_lib.info("Installing ALSA...")
-    sprout_lib.package_install("alsa-lib")
-    sprout_lib.package_install("alsa-utils")
+    sprout_lib.apply("alsa-lib")
+    sprout_lib.apply("alsa-utils")
     
     # Enable services
     sprout_lib.info("Enabling audio services...")
     sprout_lib.service_enable("dbus")
-    
-    # Start PipeWire for current session
-    sprout_lib.info("Starting PipeWire...")
-    sprout_lib.run("mkdir -p ~/.config/pipewire")
     
     sprout_lib.info("Audio setup complete!")
     sprout_lib.info("  PipeWire + PulseAudio compatibility")

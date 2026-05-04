@@ -2,7 +2,6 @@
 import sys
 import os
 
-# Add sprout_lib to path
 sys.path.insert(0, "/usr/lib/sprout_lib")
 sys.path.insert(1, "/usr/lib/python3.12/site-packages")
 
@@ -17,26 +16,26 @@ def main():
     
     # Install GNOME and essential packages
     sprout_lib.info("Installing GNOME packages...")
-    sprout_lib.package_install("gnome")
-    sprout_lib.package_install("gnome-terminal")
-    sprout_lib.package_install("gnome-software-plugin-apk")
-    sprout_lib.package_install("font-dejavu")
+    sprout_lib.apply("gnome")
+    sprout_lib.apply("gnome-terminal")
+    sprout_lib.apply("gnome-software-plugin-apk")
+    sprout_lib.apply("font-dejavu")
     
     # Install D-Bus and eudev
     sprout_lib.info("Installing D-Bus and eudev...")
-    sprout_lib.package_install("dbus")
-    sprout_lib.package_install("eudev")
+    sprout_lib.apply("dbus")
+    sprout_lib.apply("eudev")
     
     # Install PipeWire for audio
     sprout_lib.info("Installing PipeWire...")
-    sprout_lib.package_install("pipewire")
-    sprout_lib.package_install("pipewire-pulse")
-    sprout_lib.package_install("wireplumber")
+    sprout_lib.apply("pipewire")
+    sprout_lib.apply("pipewire-pulse")
+    sprout_lib.apply("wireplumber")
     
     # Install NetworkManager for GUI network config
     sprout_lib.info("Installing NetworkManager...")
-    sprout_lib.package_install("networkmanager")
-    sprout_lib.package_install("networkmanager-wifi")
+    sprout_lib.apply("networkmanager")
+    sprout_lib.apply("networkmanager-wifi")
     
     # Enable services
     sprout_lib.info("Enabling services...")
@@ -47,7 +46,7 @@ def main():
     
     # Enable apk-polkit-server for GNOME Software
     sprout_lib.info("Setting up polkit...")
-    sprout_lib.package_install("apk-polkit-rs")
+    sprout_lib.apply("apk-polkit-rs")
     sprout_lib.service_enable("apk-polkit-server")
     
     sprout_lib.info("GNOME setup complete!")
@@ -57,3 +56,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+EOF'
+echo "Fixed gnome.smp"

@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 import sys
-import os#
+import os
 
-# Add sprout_lib to path
 sys.path.insert(0, "/usr/lib/sprout_lib")
 sys.path.insert(1, "/usr/lib/python3.12/site-packages")
 
@@ -19,23 +18,23 @@ def main():
     sprout_lib.info("Checking X11 setup...")
     if os.system("which Xorg > /dev/null 2>&1") != 0:
         sprout_lib.warn("Xorg not found, installing X11...")
-        sprout_lib.package_install("xorg-server")
-        sprout_lib.package_install("xinit")
-        sprout_lib.package_install("xf86-video-vesa")
-        sprout_lib.package_install("xf86-input-mouse")
-        sprout_lib.package_install("xf86-input-keyboard")
-        sprout_lib.package_install("xauth")
-        sprout_lib.package_install("xrandr")
-        sprout_lib.package_install("setxkbmap")
+        sprout_lib.apply("xorg-server")
+        sprout_lib.apply("xinit")
+        sprout_lib.apply("xf86-video-vesa")
+        sprout_lib.apply("xf86-input-mouse")
+        sprout_lib.apply("xf86-input-keyboard")
+        sprout_lib.apply("xauth")
+        sprout_lib.apply("xrandr")
+        sprout_lib.apply("setxkbmap")
     
     # Install i3 and essential packages
     sprout_lib.info("Installing i3 packages...")
-    sprout_lib.package_install("i3wm")
-    sprout_lib.package_install("i3status")  # status bar
-    sprout_lib.package_install("xterm")  # default terminal
-    sprout_lib.package_install("dmenu")  # application launcher
-    sprout_lib.package_install("font-terminus")
-    sprout_lib.package_install("font-dejavu")
+    sprout_lib.apply("i3wm")
+    sprout_lib.apply("i3status")  # status bar
+    sprout_lib.apply("xterm")  # default terminal
+    sprout_lib.apply("dmenu")  # application launcher
+    sprout_lib.apply("font-terminus")
+    sprout_lib.apply("font-dejavu")
     
     # Enable D-Bus
     sprout_lib.info("Enabling D-Bus...")
@@ -49,3 +48,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+EOF'
+echo "Fixed i3.smp"

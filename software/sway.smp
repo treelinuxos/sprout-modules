@@ -2,7 +2,6 @@
 import sys
 import os
 
-# Add sprout_lib to path
 sys.path.insert(0, "/usr/lib/sprout_lib")
 sys.path.insert(1, "/usr/lib/python3.12/site-packages")
 
@@ -13,51 +12,51 @@ except ImportError:
     sys.exit(1)
 
 def main():
-    sprout_lib.info("Setting up Sway Wayland compositor...")
+    sprout_lib.info("Setting up sway Wayland compositor...")
     
     # Install Sway and essential packages
-    sprout_lib.info("Installing Sway packages...")
-    sprout_lib.package_install("sway")
-    sprout_lib.package_install("xwayland")  # for X11 app support
-    sprout_lib.package_install("swaylock")
-    sprout_lib.package_install("swaylockd")
-    sprout_lib.package_install("wmenu")  # default menu
-    sprout_lib.package_install("swaybg")  # wallpaper
-    sprout_lib.package_install("grim")  # screenshots
-    sprout_lib.package_install("slurp")  # region selection
-    sprout_lib.package_install("wl-clipboard")  # clipboard
-    sprout_lib.package_install("i3status")  # status bar
+    sprout_lib.info("Installing sway packages...")
+    sprout_lib.apply("sway")
+    sprout_lib.apply("xwayland")  # for X11 app support
+    sprout_lib.apply("swaylock")
+    sprout_lib.apply("swaylockd")
+    sprout_lib.apply("wmenu")  # default menu
+    sprout_lib.apply("swaybg")  # wallpaper
+    sprout_lib.apply("grim")  # screenshots
+    sprout_lib.apply("slurp")  # region selection
+    sprout_lib.apply("wl-clipboard")  # clipboard
+    sprout_lib.apply("i3status")  # status bar
     
     # Install fonts
     sprout_lib.info("Installing fonts...")
-    sprout_lib.package_install("font-dejavu")
-    sprout_lib.package_install("ttf-font-awesome")  # icon font
+    sprout_lib.apply("font-dejavu")
+    sprout_lib.apply("ttf-font-awesome")  # icon font
     
     # Install PipeWire for audio
     sprout_lib.info("Installing PipeWire for audio...")
-    sprout_lib.package_install("pipewire")
-    sprout_lib.package_install("pipewire-pulse")
-    sprout_lib.package_install("wireplumber")
+    sprout_lib.apply("pipewire")
+    sprout_lib.apply("pipewire-pulse")
+    sprout_lib.apply("wireplumber")
     
     # Install seat manager (seatd or elogind)
     sprout_lib.info("Installing seat manager...")
     if os.system("which elogind > /dev/null 2>&1") == 0:
         sprout_lib.info("elogind already installed")
     else:
-        sprout_lib.package_install("seatd")
+        sprout_lib.apply("seatd")
         sprout_lib.service_enable("seatd")
     
     # Install xdg-desktop-portal for screensharing
     sprout_lib.info("Installing xdg portals...")
-    sprout_lib.package_install("xdg-desktop-portal")
-    sprout_lib.package_install("xdg-desktop-portal-wlr")
+    sprout_lib.apply("xdg-desktop-portal")
+    sprout_lib.apply("xdg-desktop-portal-wlr")
     
     # Enable D-Bus
     sprout_lib.info("Enabling D-Bus...")
     sprout_lib.service_enable("dbus")
     
     # Create default config for user
-    sprout_lib.info("Setting up default Sway config...")
+    sprout_lib.info("Setting up default sway config...")
     config_dir = os.path.expanduser("~/.config/sway")
     if not os.path.exists(config_dir):
         os.makedirs(config_dir, exist_ok=True)
@@ -73,3 +72,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+EOF'
+echo "Fixed sway.smp"

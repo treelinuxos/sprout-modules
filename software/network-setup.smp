@@ -14,45 +14,15 @@ except ImportError:
 def main():
     sprout_lib.info("Setting up networking...")
     
-    # Check if NetworkManager is available
-    if os.system("which NetworkManager > /dev/null 2>&1") == 0:
-        sprout_lib.info("NetworkManager already installed")
-        sprout_lib.service_enable("networkmanager")
-        return
-    
     # Install base networking (Alpine)
     sprout_lib.info("Installing networking packages...")
-    sprout_lib.package_install("ifupdown-ng")
-    sprout_lib.package_install("wpa_supplicant")  # For WiFi
-    sprout_lib.package_install("wireless-tools")
+    sprout_lib.apply("ifupdown-ng")
+    sprout_lib.apply("wpa_supplicant")  # For WiFi
+    sprout_lib.apply("wireless-tools")
     
     # Enable networking service
     sprout_lib.info("Enabling networking service...")
     sprout_lib.service_enable("networking")
-    
-    # Start networking
-    sprout_lib.run("rc-service networking start")
-    
-    # Try DHCP on available interfaces
-    sprout_lib.info("Setting up DHCP...")
-    interfaces = sprout_lib.run("ip link show | grep '^[0-9]' | awk '{print $2}' | tr -d ':' | grep -v 'lo$'")
-    if interfaces:
-        for iface in interfaces.strip().split('\n'):
-            if iface:
-                sprout_lib.info(f"Configuring {iface}...")
-                with open(f"/etc/network/interfaces.d/{iface}", "w") as f:
-                    f.write(f"auto {iface}\n")
-                    f.write(f"iface {iface} inet dhcp\n")
-    
-    # Test connectivity
-    sprout_lib.info("Testing connectivity...")
-    if os.system("ping -c 1 8.8.8.8 > /dev/null 2>&1") == 0:
-        sprout_lib.info("Network is working!")
-    else:
-        sprout_lib.warn("No connectivity detected")
-        sprout_lib.info("You may need to configure WiFi manually:")
-        sprout_lib.info("  wpa_passphrase 'SSID' 'password' >> /etc/wpa_supplicant/wpa_supplicant.conf")
-        sprout_lib.info("  Then restart networking: rc-service networking restart")
     
     sprout_lib.info("Network setup complete!")
 

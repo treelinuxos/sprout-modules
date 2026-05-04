@@ -2,7 +2,6 @@
 import sys
 import os
 
-# Add sprout_lib to path
 sys.path.insert(0, "/usr/lib/sprout_lib")
 sys.path.insert(1, "/usr/lib/python3.12/site-packages")
 
@@ -17,25 +16,26 @@ def main():
     
     # Install Xorg base
     sprout_lib.info("Installing xorg-server and drivers...")
-    sprout_lib.package_install("xorg-server")
-    sprout_lib.package_install("xinit")
-    sprout_lib.package_install("xf86-video-vesa")
-    sprout_lib.package_install("xf86-input-mouse")
-    sprout_lib.package_install("xf86-input-keyboard")
+    sprout_lib.apply("xorg-server")
+    sprout_lib.apply("xinit")
+    sprout_lib.apply("xf86-video-vesa")
+    sprout_lib.apply("xf86-input-mouse")
+    sprout_lib.apply("xf86-input-keyboard")
     
     # Install additional useful X11 packages
     sprout_lib.info("Installing additional X11 packages...")
-    sprout_lib.package_install("xauth")
-    sprout_lib.package_install("xrandr")
-    sprout_lib.package_install("setxkbmap")
+    sprout_lib.apply("xauth")
+    sprout_lib.apply("xrandr")
+    sprout_lib.apply("setxkbmap")
     
     # Enable D-Bus (required for XFCE)
     sprout_lib.info("Enabling D-Bus...")
-    sprout_lib.run("rc-update add dbus default")
-    sprout_lib.run("rc-service dbus start")
+    sprout_lib.service_enable("dbus")
     
     sprout_lib.info("X11 setup complete!")
     sprout_lib.info("You can now start X with 'startx' or install a desktop environment")
 
 if __name__ == "__main__":
     main()
+EOF'
+echo "Fixed x11.smp"

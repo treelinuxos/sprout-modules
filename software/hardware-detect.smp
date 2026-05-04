@@ -16,55 +16,24 @@ def main():
     
     # Detect CPU
     sprout_lib.info("Checking CPU...")
-    cpu_info = sprout_lib.run("cat /proc/cpuinfo | grep 'model name' | head -1")
+    cpu_info = sprout_lib.detect("cpu")
     if cpu_info:
-        sprout_lib.info(f"CPU: {cpu_info.strip()}")
+        sprout_lib.info(f"CPU: {cpu_info}")
     
     # Detect GPU
     sprout_lib.info("Checking GPU...")
-    gpu_info = sprout_lib.run("lspci | grep VGA")
+    gpu_info = sprout_lib.detect("gpu")
     if gpu_info:
-        sprout_lib.info(f"GPU: {gpu_info.strip()}")
-    
-    # Detect if NVIDIA
-    nvidia = sprout_lib.run("lspci | grep -i nvidia")
-    if nvidia:
-        sprout_lib.info("NVIDIA GPU detected")
+        sprout_lib.info(f"GPU: {gpu_info}")
+        # Save GPU type for other modules
         with open("/tmp/gpu_type", "w") as f:
-            f.write("nvidia")
-    # Detect if AMD
-    elif sprout_lib.run("lspci | grep -i amd"):
-        sprout_lib.info("AMD GPU detected")
-        with open("/tmp/gpu_type", "w") as f:
-            f.write("amd")
-    else:
-        sprout_lib.info("Intel/Other GPU detected")
-        with open("/tmp/gpu_type", "w") as f:
-            f.write("intel")
+            f.write(gpu_info)
     
-    # Detect audio
-    sprout_lib.info("Checking audio...")
-    audio = sprout_lib.run("lspci | grep -i audio")
-    if audio:
-        sprout_lib.info(f"Audio: {audio.strip()}")
-    
-    # Detect network interfaces
+    # Detect network
     sprout_lib.info("Checking network interfaces...")
-    interfaces = sprout_lib.run("ip link show | grep '^[0-9]' | awk '{print $2}' | tr -d ':'")
-    if interfaces:
-        sprout_lib.info(f"Interfaces: {interfaces.strip()}")
-    
-    # Detect RAM
-    sprout_lib.info("Checking memory...")
-    mem = sprout_lib.run("free -m | grep Mem | awk '{print $2}'")
-    if mem:
-        sprout_lib.info(f"Memory: {mem.strip()} MB")
-    
-    # Detect disk space
-    sprout_lib.info("Checking disks...")
-    disks = sprout_lib.run("lsblk -d -o NAME,SIZE | grep -v NAME")
-    if disks:
-        sprout_lib.info(f"Disks:\n{disks.strip()}")
+    network_info = sprout_lib.detect("network")
+    if network_info:
+        sprout_lib.info(f"Network: {network_info}")
     
     sprout_lib.info("Hardware detection complete!")
 

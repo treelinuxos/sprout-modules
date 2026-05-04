@@ -17,50 +17,24 @@ def main():
     # Detect if UEFI or BIOS
     if os.path.exists("/sys/firmware/efi"):
         sprout_lib.info("UEFI system detected")
-        install_grub_uefi()
+        sprout_lib.apply("grub")
+        sprout_lib.apply("efibootmgr")
+        sprout_lib.info("Installing GRUB to EFI directory...")
+        os.system("grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Treelinux")
     else:
         sprout_lib.info("BIOS system detected")
-        install_grub_bios()
+        sprout_lib.apply("grub")
+        disk = os.environ.get("TREE_INSTALL_DISK", "/dev/sda")
+        sprout_lib.info(f"Installing GRUB to {disk}...")
+        os.system(f"grub-install --target=i386-pc {disk}")
+    
+    # Generate config
+    sprout_lib.info("Generating GRUB config...")
+    os.system("grub-mkconfig -o /boot/grub/grub.cfg")
     
     sprout_lib.info("Bootloader setup complete!")
-    sprout_lib.info("Next: Reboot and remove installation media")
-
-def install_grub_uefi():
-    """Install GRUB for UEFI systems."""
-    sprout_lib.info("Installing GRUB for UEFI...")
-    
-    # Install GRUB and efibootmgr
-    sprout_lib.package_install("grub")
-    sprout_lib.package_install("efibootmgr")
-    
-    # Install GRUB to EFI partition
-    sprout_lib.info("Installing GRUB to EFI directory...")
-    sprout_lib.run("grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Treelinux")
-    
-    # Generate config
-    sprout_lib.info("Generating GRUB config...")
-    sprout_lib.run("grub-mkconfig -o /boot/grub/grub.cfg")
-    
-    sprout_lib.info("GRUB UEFI installation complete!")
-
-def install_grub_bios():
-    """Install GRUB for BIOS systems."""
-    sprout_lib.info("Installing GRUB for BIOS...")
-    
-    # Install GRUB
-    sprout_lib.package_install("grub")
-    
-    # Get disk for GRUB installation (default to /dev/sda)
-    disk = os.environ.get("TREE_INSTALL_DISK", "/dev/sda")
-    sprout_lib.info(f"Installing GRUB to {disk}...")
-    
-    sprout_lib.run(f"grub-install --target=i386-pc {disk}")
-    
-    # Generate config
-    sprout_lib.info("Generating GRUB config...")
-    sprout_lib.run("grub-mkconfig -o /boot/grub/grub.cfg")
-    
-    sprout_lib.info("GRUB BIOS installation complete!")
 
 if __name__ == "__main__":
     main()
+EOF'
+echo "Fixed bootloader.smp"

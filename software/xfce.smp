@@ -2,7 +2,6 @@
 import sys
 import os
 
-# Add sprout_lib to path
 sys.path.insert(0, "/usr/lib/sprout_lib")
 sys.path.insert(1, "/usr/lib/python3.12/site-packages")
 
@@ -15,43 +14,29 @@ except ImportError:
 def main():
     sprout_lib.info("Setting up XFCE desktop environment...")
     
-    # Check if X11 is installed
-    sprout_lib.info("Checking X11 setup...")
-    if os.system("which Xorg > /dev/null 2>&1") != 0:
-        sprout_lib.warn("Xorg not found, installing X11 first...")
-        # Install X11
-        sprout_lib.package_install("xorg-server")
-        sprout_lib.package_install("xinit")
-        sprout_lib.package_install("xf86-video-vesa")
-        sprout_lib.package_install("xf86-input-mouse")
-        sprout_lib.package_install("xf86-input-keyboard")
-        sprout_lib.package_install("xauth")
-        sprout_lib.package_install("xrandr")
-        sprout_lib.package_install("setxkbmap")
-    
     # Install XFCE4 and essential packages
     sprout_lib.info("Installing XFCE4 packages...")
-    sprout_lib.package_install("xfce4")
-    sprout_lib.package_install("xfce4-terminal")
-    sprout_lib.package_install("xfce4-screensaver")
-    sprout_lib.package_install("lightdm-gtk-greeter")
-    sprout_lib.package_install("font-dejavu")
+    sprout_lib.apply("xfce4")
+    sprout_lib.apply("xfce4-terminal")
+    sprout_lib.apply("xfce4-screensaver")
+    sprout_lib.apply("lightdm-gtk-greeter")
+    sprout_lib.apply("font-dejavu")
     
     # Install theme and icons
     sprout_lib.info("Installing themes and icons...")
-    sprout_lib.package_install("adw-gtk3")
-    sprout_lib.package_install("adwaita-xfce-icon-theme")
+    sprout_lib.apply("adw-gtk3")
+    sprout_lib.apply("adwaita-xfce-icon-theme")
     
     # Install file management packages
     sprout_lib.info("Installing file management packages...")
-    sprout_lib.package_install("thunar")
-    sprout_lib.package_install("thunar-volman")
-    sprout_lib.package_install("gvfs")
+    sprout_lib.apply("thunar")
+    sprout_lib.apply("thunar-volman")
+    sprout_lib.apply("gvfs")
     
     # Install Polkit for privilege escalation
     sprout_lib.info("Installing Polkit integration...")
-    sprout_lib.package_install("xfce-polkit")
-    sprout_lib.package_install("polkit-elogind")
+    sprout_lib.apply("xfce-polkit")
+    sprout_lib.apply("polkit-elogind")
     
     # Enable services
     sprout_lib.info("Enabling services...")
@@ -66,3 +51,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+EOF'
+echo "Fixed xfce.smp"
