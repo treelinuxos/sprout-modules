@@ -12,6 +12,38 @@ except ImportError:
     print("! sprout_lib not found")
     sys.exit(1)
 
+# Embedded Treelinux logo
+LOGO = """                                                            
+                                                            
+                    ,:dl:.,loollolloodd:                    
+                 ;:lkxxxkxxxooxxxxxoxxxkoc;.                
+              .clkxkooooooooooooooooooooxxkxld.             
+            .xxkxoooooooooooooooooooooooooooxkO,            
+           ;oOooooooooooooooooooooooooooooooookxl,          
+         .xkxoooooooooooooooooooooooooooooooooookx          
+         ,WooooooooooooooooooooooooooooooooooooooOd         
+          okooooooooooooooooooooooooooooooooooooooko        
+         ,xxoooooooooooooooooooooooooooooooooooooxk:        
+         xkooooooooooooooooooooooooooooooooooooooxk         
+         okxooooooooooooooooooooooooooooooooooooxxO,        
+         ,WxooooooooooooooxxxxooxoooooooooooooooOl.         
+          xOoooooooooxkkkWKl;oxkMOxooooooooooooxO,          
+           .xkkxxxoooooxkkWWO, ,OMWlkkoooooooookx:           
+             .;:dxxxxxkxd.:WWO:kOWloWOOoxxxxxkol             
+                  ;;cd:    cWOMOkMWx; clddlcc,               
+                            xOkkOW:                          
+                            dWOkOo                           
+                            cWOkW:                           
+                            :WkOW;                           
+                            cWOOW:                           
+                            lWOkW:                           
+                            kOkkWl                           
+                       ,  .xWOkkWW:  .                       
+                    ,:coxlOOMOkOOMOxkol:,.                   
+                    ... ..,,;. ..;...  ..                    
+                                                            
+                                                            """
+
 def main():
     sprout_lib.info("Setting up Treelinux fastfetch logo...")
     
@@ -31,25 +63,9 @@ def main():
 
 def install_logo():
     """Install the Treelinux ASCII logo."""
-    # Try multiple locations
-    locations = [
-        "/usr/lib/sprout/treelinux_logo.txt",
-        "/etc/treelinux/modules/treelinux_logo.txt",
-        "/tmp/treelinux_logo.txt"
-    ]
-    
-    src = None
-    for loc in locations:
-        if os.path.exists(loc):
-            src = loc
-            break
-    
-    if not src:
-        sprout_lib.warn("Logo not found in expected locations")
-        return
-    
     dst = "/etc/treelinux/treelinux_logo.txt"
-    os.system(f"cp {src} {dst}")
+    with open(dst, "w") as f:
+        f.write(LOGO)
     sprout_lib.info(f"Logo installed: {dst}")
 
 def install_config():
@@ -67,7 +83,7 @@ def install_config():
         "type": "file-raw",
         "source": "/etc/treelinux/treelinux_logo.txt",
         "width": 30,
-        "height": 15,
+        "height": 29,
         "padding": {
             "top": 0,
             "left": 0,
